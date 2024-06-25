@@ -21,3 +21,4 @@ jobs:
             done
             review
             wait review
+          add_comment: true
