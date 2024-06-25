@@ -41,7 +41,7 @@ jobs:
           echo test, and deploy your project.
       - name: Label timer
         uses: tbsmcd/label_timer@v3.1
-          with:
-          targets: ['in progress','done']
+        with:
+          targets: 'in progress'
           token: ${{secret.TOKEN}}
           
