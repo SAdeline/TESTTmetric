@@ -15,10 +15,13 @@ jobs:
       - name: Label Timer
         uses: tbsmcd/label_timer@v3.1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: |
-            in progress
-            done
-            review
-            wait review
-          add_comment: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          targets: |
+            - label: in progress
+              action: comment
+            - label: done
+              action: comment
+            - label: review
+              action: comment
+            - label: wait review
+              action: comment
