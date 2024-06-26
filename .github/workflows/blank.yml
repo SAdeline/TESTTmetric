@@ -1,27 +1,40 @@
-name: Label Timer Workflow
+name: Track Time on Issues
 
 on:
   issues:
-    types: [labeled, unlabeled]
+    types: [labeled]
 
 jobs:
-  label_timer:
+  track-time:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Label Timer
-        uses: tbsmcd/label_timer@v3.1
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          targets: |
-            - label: in progress
-              action: comment
-            - label: done
-              action: comment
-            - label: review
-              action: comment
-            - label: wait review
-              action: comment
+          node-version: '14'
+
+      - name: Extract issue number
+        id: issue
+        run: echo "::set-output name=number::${{ github.event.issue.number }}"
+
+      - name: Start timer
+        if: contains(github.event.label.name, 'In Progress')
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.EVERHOUR_API_TOKEN }}" \
+            -d '{"issue_number": "${{ steps.issue.outputs.number }}", "action": "start"}' \
+            https://api.everhour.com/timers
+
+      - name: Stop timer
+        if: contains(github.event.label.name, 'Review')
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.EVERHOUR_API_TOKEN }}" \
+            -d '{"issue_number": "${{ steps.issue.outputs.number }}", "action": "stop"}' \
+            https://api.everhour.com/timers
