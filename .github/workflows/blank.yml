@@ -22,7 +22,7 @@ jobs:
         run: echo "::set-output name=number::${{ github.event.issue.number }}"
 
       - name: Start timer
-        if: contains(github.event.label.name, 'In Progress')
+        if: contains(github.event.label.name, 'in progress')
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
@@ -31,7 +31,7 @@ jobs:
             https://api.everhour.com/timers
 
       - name: Stop timer
-        if: contains(github.event.label.name, 'Review')
+        if: contains(github.event.label.name, 'wait_review')
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
