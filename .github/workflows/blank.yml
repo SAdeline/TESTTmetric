@@ -1,40 +1,30 @@
-name: Track Time on Issues
+name: Start time tracker
 
 on:
   issues:
     types: [labeled]
 
 jobs:
-  track-time:
+  everhour_timer_job:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '16'
 
-      - name: Extract issue number
-        id: issue
-        run: echo "::set-output name=number::${{ github.event.issue.number }}"
+      - name: Install dependencies
+        run: npm install axios @octokit/rest
 
-      - name: Start timer
-        if: contains(github.event.label.name, 'in progress')
-        run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.EVERHOUR_API_TOKEN }}" \
-            -d '{"issue_number": "${{ steps.issue.outputs.number }}", "action": "start"}' \
-            https://api.everhour.com/timers
+      - name: Run Everhour script
+        run: node .github/scripts/start-everhour-time.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVERHOUR_API_TOKEN: ${{ secrets.EVERHOUR_API_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_PAYLOAD: ${{ toJson(github.event) }}
 
-      - name: Stop timer
-        if: contains(github.event.label.name, 'wait_review')
-        run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.EVERHOUR_API_TOKEN }}" \
-            -d '{"issue_number": "${{ steps.issue.outputs.number }}", "action": "stop"}' \
-            https://api.everhour.com/timers
