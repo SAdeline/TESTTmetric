@@ -1,4 +1,4 @@
-name: Start time tracker
+name: Start and Stop time tracker
 
 on:
   issues:
@@ -19,12 +19,19 @@ jobs:
       - name: Install dependencies
         run: npm install axios @octokit/rest
 
-      - name: Run Everhour script
-        run: node .github/scripts/start-everhour-time.mjs
+      - name: Determine action based on label
+        run: |
+          label="${{ github.event.label.name }}"
+          if [[ $label == "in progress" ]]; then
+            node .github/scripts/start-everhour-time.mjs
+          elif [[ $label == "wait_review" ]]; then
+            node .github/scripts/stop-everhour-time.mjs
+          else
+            echo "No action defined for label: $label"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVERHOUR_API_TOKEN: ${{ secrets.EVERHOUR_API_TOKEN }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_EVENT_PAYLOAD: ${{ toJson(github.event) }}
-
