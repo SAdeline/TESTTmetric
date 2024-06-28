@@ -20,7 +20,7 @@ jobs:
         run: npm install axios @octokit/rest
 
       - name: Run Everhour script
-        run: node .github/scripts/start-everhour-time.js
+        run: node .github/scripts/start-everhour-time.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVERHOUR_API_TOKEN: ${{ secrets.EVERHOUR_API_TOKEN }}
