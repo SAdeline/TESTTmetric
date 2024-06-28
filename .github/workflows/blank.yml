@@ -22,9 +22,9 @@ jobs:
       - name: Determine action based on label
         run: |
           label="${{ github.event.label.name }}"
-          if [[ $label == "in progress" ]]; then
+          if [[ $label == "in progress" || $label == "review" ]]; then
             node .github/scripts/start-everhour-time.mjs
-          elif [[ $label == "wait_review" ]]; then
+          elif [[ $label == "done" || $label == "wait_review" ]]; then
             node .github/scripts/stop-everhour.mjs
           else
             echo "No action defined for label: $label"
