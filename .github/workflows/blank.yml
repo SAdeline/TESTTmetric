@@ -25,7 +25,7 @@ jobs:
           if [[ $label == "in progress" ]]; then
             node .github/scripts/start-everhour-time.mjs
           elif [[ $label == "wait_review" ]]; then
-            node .github/scripts/stop-everhour-time.mjs
+            node .github/scripts/stop-everhour.mjs
           else
             echo "No action defined for label: $label"
           fi
