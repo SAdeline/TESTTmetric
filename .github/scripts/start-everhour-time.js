@@ -1,5 +1,5 @@
-import { Octokit } from '@octokit/rest';
-import axios from 'axios';
+const { Octokit } = require('@octokit/rest');
+const axios = require('axios');
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Remplacez par un token valide
 const EVERHOUR_API_TOKEN = process.env.EVERHOUR_API_TOKEN;
