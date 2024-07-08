@@ -18,5 +18,5 @@ Manuel:
 Workflow des actions actuelles:
 - s'active au label sur les issues
 - si 'in progress' ou 'review' lance le temps
-- si 'will_review' ou 'done' arrête le temps
+- si 'wait_review' ou 'done' arrête le temps
 
